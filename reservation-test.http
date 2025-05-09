@@ -1,0 +1,14 @@
+### Créer une réservation via Gateway
+POST http://localhost:8080/reservations
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+
+{
+  "travelerName": "David",
+  "destination": "Berlin",
+  "agencyName": "AgenceDelta"
+}
+
+### Lister les réservations via Gateway
+GET http://localhost:8080/reservations
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA

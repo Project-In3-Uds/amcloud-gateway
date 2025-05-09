@@ -1,0 +1,22 @@
+### Créer une invitation via le Gateway
+POST http://localhost:8080/invitations
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+
+{
+  "email": "user3@example.com"
+}
+
+> {%
+client.global.set("invitation_token", response.body);
+%}
+###
+
+### Valider une invitation via le Gateway
+POST http://localhost:8080/invitations/validate
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+
+{
+  "token": "a8fdd870-9822-40fc-9449-797b721e844f"
+}
