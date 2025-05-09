@@ -1,0 +1,56 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+      forwarded:
+        enabled: true
+
+      routes:
+        - id: test_route
+          uri: http://httpbin.org
+          predicates:
+            - Path=/test/**
+          filters:
+            - RewritePath=/test/(?<segment>.*), /${segment}
+        
+        - id: iam_route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/**
+
+        - id: billing_route
+          uri: http://localhost:8082
+          predicates:
+            - Path=/billing/**, /billing
+          filters:
+            - RewritePath=/billing(?<segment>/?.*), /api/subscriptions${segment}
+
+        - id: reservation_service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/reservations/**, /reservations
+          filters:
+            - RewritePath=/reservations(?<segment>/?.*), /api/reservations${segment}
+
+        - id: invitation_route
+          uri: http://localhost:8084
+          predicates:
+            - Path=/invitations/**, /invitations
+          filters:
+            - RewritePath=/invitations(?<segment>/?.*), /api/invitations${segment}
+
+        - id: notification_route
+          uri: http://localhost:8085
+          predicates:
+            - Path=/notifications/**, /notifications
+          filters:
+            - RewritePath=/notifications(?<segment>/?.*), /api/notifications${segment}    
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

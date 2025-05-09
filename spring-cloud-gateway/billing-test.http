@@ -1,0 +1,17 @@
+### Créer une souscription (via Gateway)
+POST http://localhost:8080/billing
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0Njc1ODQ0MCwiZXhwIjoxNzQ2NzYyMDQwfQ.UjiENMp2SAKpw2f-7_40_aSnO3IGBEHqkvvx2AM0RjE
+Content-Type: application/json
+
+{
+  "agencyName": "AgenceBeta",
+  "planType": "Standard"
+}
+
+### Lister les souscriptions (via Gateway)
+GET http://localhost:8080/billing
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0Njc1ODQ0MCwiZXhwIjoxNzQ2NzYyMDQwfQ.UjiENMp2SAKpw2f-7_40_aSnO3IGBEHqkvvx2AM0RjE
+
+### Vérifier la validité d'une agence (via Gateway)
+GET http://localhost:8080/billing/AgenceBeta/valid
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0Njc1ODQ0MCwiZXhwIjoxNzQ2NzYyMDQwfQ.UjiENMp2SAKpw2f-7_40_aSnO3IGBEHqkvvx2AM0RjE

@@ -1,0 +1,10 @@
+### Envoyer une notification via le Gateway
+POST http://localhost:8080/notifications/send
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0Njc1ODQ0MCwiZXhwIjoxNzQ2NzYyMDQwfQ.UjiENMp2SAKpw2f-7_40_aSnO3IGBEHqkvvx2AM0RjE
+
+{
+  "to": "andersonmetsanoum@gmail.com",
+  "subject": "Welcome",
+  "content": "Welcome to AMCLOUD platform!"
+}
