@@ -1,7 +1,7 @@
 ### Créer une invitation via le Gateway
 POST http://localhost:8080/invitations
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtZXRzYSIsImlhdCI6MTc0NzY5OTI2OCwiZXhwIjoxNzQ3NzAyODY4fQ.ItVcAg62LHJygGOz04SP1UQyyQO64URg38Iub9FAcYwyT9NcQOBqMtQ6ZrCZV8a3RdXkgkTVygDQctTrjqpmBPFB_vd-0W0p-qFjqToT_-hYS6LQiLOQX_mIk7I1k4MIz2QJQcUGcY6015zCn015Ep4iD-gLQkeRq3qG26q8FNESTR1mLQv88XtItEIkRaIfwduxnayJCMm2pBAExitzQ1uZXT_5J_V1EloEP0x4z3KzUwvdBihy-fppHwdfidu51FCgEj8fB_XFbUKfZEo5ipGznmMywx--pu_qOXqQC8VPkGKXbu9VPPQMIIR8x-9eyqxyPV-MH3fNaVGFTdATwA
 
 {
   "email": "user3@example.com"
@@ -15,8 +15,8 @@ client.global.set("invitation_token", response.body);
 ### Valider une invitation via le Gateway
 POST http://localhost:8080/invitations/validate
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtZXRzYSIsImlhdCI6MTc0NzY5OTI2OCwiZXhwIjoxNzQ3NzAyODY4fQ.ItVcAg62LHJygGOz04SP1UQyyQO64URg38Iub9FAcYwyT9NcQOBqMtQ6ZrCZV8a3RdXkgkTVygDQctTrjqpmBPFB_vd-0W0p-qFjqToT_-hYS6LQiLOQX_mIk7I1k4MIz2QJQcUGcY6015zCn015Ep4iD-gLQkeRq3qG26q8FNESTR1mLQv88XtItEIkRaIfwduxnayJCMm2pBAExitzQ1uZXT_5J_V1EloEP0x4z3KzUwvdBihy-fppHwdfidu51FCgEj8fB_XFbUKfZEo5ipGznmMywx--pu_qOXqQC8VPkGKXbu9VPPQMIIR8x-9eyqxyPV-MH3fNaVGFTdATwA
 
 {
-  "token": "a8fdd870-9822-40fc-9449-797b721e844f"
+  "token": "fcfed4c6-b0a5-474e-b36f-ea441dd7e9be"
 }
