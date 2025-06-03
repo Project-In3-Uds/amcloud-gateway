@@ -1,9 +1,7 @@
 server:
-  port: ${GATEWAY_SERVER_PORT}
-
-spring:
+  port: 8080
   application:
-    name: ${GATEWAY_APPLICATION_NAME}
+    name: gateway
 
   cloud:
     gateway:
@@ -11,46 +9,103 @@ spring:
         enabled: true
 
       routes:
-        - id: test_route
-          uri: ${TEST_ROUTE_URI}
+        # Routes for TestController endpoints now located in the IAM service
+        - id: test_public_route
+          uri: http://localhost:8081 # IAM service URL
           predicates:
-            - Path=${TEST_ROUTE_PATH}
+            - Path=/public/**
           filters:
-            - RewritePath=${TEST_ROUTE_REWRITE}
-        
-        - id: iam_route
-          uri: ${IAM_ROUTE_URI}
+            # Rewrites /public/hello to /test/public/hello for the IAM service
+            - RewritePath=/public/(?<segment>.*), /test/public/${segment}
+
+        - id: test_secured_route
+          uri: http://localhost:8081 # IAM service URL
           predicates:
-            - Path=${IAM_ROUTE_PATH}
+            - Path=/api/secured
+          filters:
+            # Rewrites /api/secured to /test/api/secured for the IAM service
+            - RewritePath=/api/secured, /test/api/secured
+             
+        - id: test_admin_route
+          uri: http://localhost:8081 # IAM service URL
+          predicates:
+            - Path=/api/admin/dashboard
+          filters:
+            # Rewrites /api/admin/dashboard to /test/api/admin/dashboard for the IAM service
+            - RewritePath=/api/admin/dashboard, /test/api/admin/dashboard
+             
+        - id: test_data_route
+          uri: http://localhost:8081 # IAM service URL
+          predicates:
+            - Path=/api/data/read
+          filters:
+            # Rewrites /api/data/read to /test/api/data/read for the IAM service
+            - RewritePath=/api/data/read, /test/api/data/read
+             
+        # Existing routes for other services
+        - id: iam_route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/**
 
         - id: billing_route
-          uri: ${BILLING_ROUTE_URI}
+          uri: http://localhost:8082
           predicates:
-            - Path=${BILLING_ROUTE_PATH}
+            - Path=/billing/**
           filters:
-            - RewritePath=${BILLING_ROUTE_REWRITE}
-
+            - RewritePath=/billing/(?<segment>.*), /api/subscriptions/${segment}
+             
         - id: reservation_service
-          uri: ${RESERVATION_ROUTE_URI}
+          uri: http://localhost:8083
           predicates:
-            - Path=${RESERVATION_ROUTE_PATH}
+            - Path=/reservations/**
           filters:
-            - RewritePath=${RESERVATION_ROUTE_REWRITE}
+            - RewritePath=/reservations/(?<segment>.*), /api/reservations/${segment}
 
         - id: invitation_route
-          uri: ${INVITATION_ROUTE_URI}
+          uri: http://localhost:8084
           predicates:
-            - Path=${INVITATION_ROUTE_PATH}
+            - Path=/invitations/**
           filters:
-            - RewritePath=${INVITATION_ROUTE_REWRITE}
+            - RewritePath=/invitations/(?<segment>.*), /api/invitations/${segment}
 
         - id: notification_route
-          uri: ${NOTIFICATION_ROUTE_URI}
+          uri: http://localhost:8085
           predicates:
-            - Path=${NOTIFICATION_ROUTE_PATH}
+            - Path=/notifications/**
           filters:
-            - RewritePath=${NOTIFICATION_ROUTE_REWRITE}    
+            - RewritePath=/notifications/(?<segment>.*), /api/notifications/${segment}
+
+        - id: secure-data-route
+          uri: http://localhost:8081/secure-data # IAM service URL
+          predicates:
+            - Path=/secure-data
+          filters:
+            - RemoveRequestHeader=Authorization # Optional: Remove the Authorization header if not needed downstream
+
+        # Example route for HTTPS testing
+        - id: test_https_route
+          uri: https://example.com
+          predicates:
+            - Path=/test/https
+          filters:
+            - RewritePath=/test/https, /
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081 # IAM service issuer URI
+          jwk-set-uri: http://localhost:8081/jwks.json # JWK Set URI for JWT validation
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+    health:
+      show-details: always
 
 logging:
   level:
-    org.springframework.cloud.gateway: ${GATEWAY_LOGGING_LEVEL}
+    org.springframework.cloud.gateway: DEBUG
