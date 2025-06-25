@@ -1,5 +1,5 @@
 ### Login pour récupérer le JWT
-POST http://localhost:8080/auth/login
+POST http://4.213.176.200:8080/auth/login
 Content-Type: application/json
 
 {

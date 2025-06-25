@@ -1,0 +1,26 @@
+### Test Endpoint Public
+# Accessible sans authentification.
+GET http://localhost:8080/public/hello
+Accept: application/json
+
+### Test Endpoint Sécurisé (nécessite un JWT valide)
+# Remplacez <YOUR_VALID_JWT_TOKEN> par un JWT valide émis par votre service IAM.
+# Ce token doit être non expiré et avoir un émetteur et une audience corrects.
+GET http://localhost:8080/api/secured
+Accept: application/json
+Authorization: Bearer eyJraWQiOiJteS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sInNjb3BlcyI6WyJyZWFkIiwid3JpdGUiXSwic3ViIjoiYWRtaW4iLCJpYXQiOjE3NDg5MDE3NjYsImV4cCI6MTc0ODkwNTM2NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxIn0.oAIUwcoM9BtOz5vKkyPZ0Rxpwb6oAtH6FNa0R1Q_0dLXRYu_C-nGtL9sGihZghfGln7Bax7zts4YADoUQ7gEElkPynRufOpk2u92e7rLEoK8oyI0l62d16ixrIKv_3BlH2IBzFe3eMon-Vi-4-kmA9AmC--oDAt_iVr6HjIrr-0ljUF_pnwEliBdF-T7U-Uw572b5GqydLMlj2B0YPJXofjk_abg3LnINy_btTxyahZJsHyYtGQeWdzepPuZZn5uwpKjk2-fF-ZrwoST5AQkfeSSXTzntsrzU-VOiEWRzhhTF3mdFSSAc7zvjPIubEMjMy_dSjVZKeEwwnYJf2KRwA  
+
+### Test Endpoint Admin (nécessite un JWT avec le rôle 'ADMIN')
+# Remplacez <YOUR_ADMIN_JWT_TOKEN> par un JWT valide.
+# Le payload de ce JWT doit inclure {"roles": ["ADMIN"]} (ou {"roles": ["ROLE_ADMIN"]})
+# selon la façon dont votre service IAM génère les rôles.
+GET http://localhost:8080/api/admin/dashboard
+Accept: application/json
+Authorization: Bearer eyJraWQiOiJteS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sInNjb3BlcyI6WyJyZWFkIiwid3JpdGUiXSwic3ViIjoiYWRtaW4iLCJpYXQiOjE3NDg5MDE3NjYsImV4cCI6MTc0ODkwNTM2NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxIn0.oAIUwcoM9BtOz5vKkyPZ0Rxpwb6oAtH6FNa0R1Q_0dLXRYu_C-nGtL9sGihZghfGln7Bax7zts4YADoUQ7gEElkPynRufOpk2u92e7rLEoK8oyI0l62d16ixrIKv_3BlH2IBzFe3eMon-Vi-4-kmA9AmC--oDAt_iVr6HjIrr-0ljUF_pnwEliBdF-T7U-Uw572b5GqydLMlj2B0YPJXofjk_abg3LnINy_btTxyahZJsHyYtGQeWdzepPuZZn5uwpKjk2-fF-ZrwoST5AQkfeSSXTzntsrzU-VOiEWRzhhTF3mdFSSAc7zvjPIubEMjMy_dSjVZKeEwwnYJf2KRwA  
+
+### Test Endpoint Scoped (nécessite un JWT avec le scope 'read')
+# Remplacez <YOUR_SCOPED_JWT_TOKEN> par un JWT valide.
+# Le payload de ce JWT doit inclure {"scope": "read"} ou {"scopes": ["read"]}.
+GET http://localhost:8080/api/data/read
+Accept: application/json
+Authorization: Bearer eyJraWQiOiJteS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX0FETUlOIl0sInNjb3BlcyI6WyJyZWFkIiwid3JpdGUiXSwic3ViIjoiYWRtaW4iLCJpYXQiOjE3NDg5MDE3NjYsImV4cCI6MTc0ODkwNTM2NiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgxIn0.oAIUwcoM9BtOz5vKkyPZ0Rxpwb6oAtH6FNa0R1Q_0dLXRYu_C-nGtL9sGihZghfGln7Bax7zts4YADoUQ7gEElkPynRufOpk2u92e7rLEoK8oyI0l62d16ixrIKv_3BlH2IBzFe3eMon-Vi-4-kmA9AmC--oDAt_iVr6HjIrr-0ljUF_pnwEliBdF-T7U-Uw572b5GqydLMlj2B0YPJXofjk_abg3LnINy_btTxyahZJsHyYtGQeWdzepPuZZn5uwpKjk2-fF-ZrwoST5AQkfeSSXTzntsrzU-VOiEWRzhhTF3mdFSSAc7zvjPIubEMjMy_dSjVZKeEwwnYJf2KRwA  

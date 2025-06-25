@@ -1,23 +1,45 @@
 server:
   port: ${GATEWAY_SERVER_PORT}
-
-spring:
   application:
     name: ${GATEWAY_APPLICATION_NAME}
 
+spring:
   cloud:
     gateway:
       forwarded:
         enabled: true
 
       routes:
-        - id: test_route
-          uri: ${TEST_ROUTE_URI}
+        # Routes for TestController endpoints now located in the IAM service
+        - id: test_public_route
+          uri: ${IAM_ROUTE_URI}
           predicates:
-            - Path=${TEST_ROUTE_PATH}
+            - Path=/public/**
           filters:
-            - RewritePath=${TEST_ROUTE_REWRITE}
-        
+            - RewritePath=/public/(?<segment>.*), /test/public/${segment}
+
+        - id: test_secured_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/api/secured
+          filters:
+            - RewritePath=/api/secured, /test/api/secured
+             
+        - id: test_admin_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/api/admin/dashboard
+          filters:
+            - RewritePath=/api/admin/dashboard, /test/api/admin/dashboard
+             
+        - id: test_data_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/api/data/read
+          filters:
+            - RewritePath=/api/data/read, /test/api/data/read
+             
+        # Existing routes for other services
         - id: iam_route
           uri: ${IAM_ROUTE_URI}
           predicates:
@@ -29,7 +51,7 @@ spring:
             - Path=${BILLING_ROUTE_PATH}
           filters:
             - RewritePath=${BILLING_ROUTE_REWRITE}
-
+             
         - id: reservation_service
           uri: ${RESERVATION_ROUTE_URI}
           predicates:
@@ -49,7 +71,37 @@ spring:
           predicates:
             - Path=${NOTIFICATION_ROUTE_PATH}
           filters:
-            - RewritePath=${NOTIFICATION_ROUTE_REWRITE}    
+            - RewritePath=${NOTIFICATION_ROUTE_REWRITE}
+
+        - id: secure-data-route
+          uri: ${SECURE_DATA_ROUTE_URI}
+          predicates:
+            - Path=${SECURE_DATA_ROUTE_PATH}
+          filters:
+            - RemoveRequestHeader=Authorization # Optional: Remove the Authorization header if not needed downstream
+
+        # Example route for HTTPS testing
+        - id: test_https_route
+          uri: ${TEST_HTTPS_ROUTE_URI}
+          predicates:
+            - Path=${TEST_HTTPS_ROUTE_PATH}
+          filters:
+            - RewritePath=${TEST_HTTPS_ROUTE_REWRITE}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+          jwk-set-uri: ${JWT_JWK_SET_URI}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+    health:
+      show-details: always
 
 logging:
   level:
