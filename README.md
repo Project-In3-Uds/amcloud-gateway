@@ -105,7 +105,7 @@ curl http://localhost:8080/billing/list
 ```mermaid
 sequenceDiagram
     actor Utilisateur
-    participant IAM as "IAM (Keycloak/Okta)"
+    participant IAM as "IAM"
     participant Gateway as "API Gateway"
     participant Microservice as "Microservice (Ex: Billing)"
     participant Invitation as "Invitation Service"
