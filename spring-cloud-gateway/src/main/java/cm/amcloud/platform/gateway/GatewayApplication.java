@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.O
 import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 @SpringBootApplication(exclude = {
     SecurityAutoConfiguration.class,
     ReactiveSecurityAutoConfiguration.class,
@@ -16,6 +18,14 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class GatewayApplication {
 
     public static void main(String[] args) {
+
+        // Load .env file
+        Dotenv dotenv = Dotenv.configure()
+                 .load();
+
+        // Set environment variables
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+
         SpringApplication.run(GatewayApplication.class, args);
     }
 }

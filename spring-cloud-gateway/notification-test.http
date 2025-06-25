@@ -1,7 +1,7 @@
 ### Envoyer une notification via le Gateway
-POST http://localhost:8080/notifications/send
+POST http://192.168.122.157:8080/notifications/send
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0Njc1ODQ0MCwiZXhwIjoxNzQ2NzYyMDQwfQ.UjiENMp2SAKpw2f-7_40_aSnO3IGBEHqkvvx2AM0RjE
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtZXRzYSIsImlhdCI6MTc0ODA0ODk0MCwiZXhwIjoxNzQ4MDUyNTQwfQ.C0JjvhkZ5dvUMpRODApIOzRaX9kdpPzraXUJx4ZuRens-ezgBymFHmShTFeaf_ScowwiPsA6hiW489zK4wBZVDC5hGPgZtvvv0wt1Cywucav0wYD2ahstyAYeAr1bJlLDsuI4GAq5DUzJIzEm0rUXq5f_EIbhdDV4CBYgI0i_X1FyIbdGlww45JGyJdG4LPlOXbpcaCqhdT4XCfHoT_f1wx-DcZCeht4FcXG8Mh5BHd1BFMbttr_tuNg0_ngZd_urcEWxdhP0WwC_3gdUWMpYrpoIZrKfeS4Z_1gVeOmHRPHC7oxLJMN6koQsDNzHUotGapS1jzias_lB4W2CJWESw
 
 {
   "to": "andersonmetsanoum@gmail.com",

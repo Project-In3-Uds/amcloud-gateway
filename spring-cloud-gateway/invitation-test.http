@@ -1,7 +1,7 @@
 ### Créer une invitation via le Gateway
 POST http://localhost:8080/invitations
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+Authorization: Bearer eyJraWQiOiJteS1rZXktaWQiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODEiLCJzdWIiOiJhZG1pbiIsImlhdCI6MTc0ODUzMDA3NCwiZXhwIjoxNzQ4NTMzNjc0fQ.by-tgubbwnkFgsQSVWf7Adlk-gidO2UTJHI2aTVg7b9MEziYw0bPKnQ6HwrkPfE1KDPKFMiUPtz0MLewA2585f1IFxDz60h8p3G4v3v02al5zw0ree8GR-49xEBmGIn75xsXbcZVYFfi2Zo6YBGWDwKwSXR8MXGtVjQ5kSDknmXuNt6OX8n8NL6yCc79mjRNgsJCnNW0Y0W3NjUNgtMQ8J5srRaPt1s_j8nVq4mzn5z2hxnSCsvGm8hFhOgg_3LdQtF_QENiYfhGsqLbpK3uXkSXhzM-F2khb3sG43gtoBf0jRaJMK8HgidKoD0bjIbqJfZ5u6eVTaHxQdrKuXlhpQ 
 
 {
   "email": "user3@example.com"
@@ -13,10 +13,10 @@ client.global.set("invitation_token", response.body);
 ###
 
 ### Valider une invitation via le Gateway
-POST http://localhost:8080/invitations/validate
+POST http://192.168.122.157:8080/invitations/validate
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc0NjQ2ODczMiwiZXhwIjoxNzQ2NDcyMzMyfQ.2oDO02elaQeOEfOY-CVZm5y7TnVZuTWXDZ3h68-QSFA
+Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtZXRzYSIsImlhdCI6MTc0NzY5OTI2OCwiZXhwIjoxNzQ3NzAyODY4fQ.ItVcAg62LHJygGOz04SP1UQyyQO64URg38Iub9FAcYwyT9NcQOBqMtQ6ZrCZV8a3RdXkgkTVygDQctTrjqpmBPFB_vd-0W0p-qFjqToT_-hYS6LQiLOQX_mIk7I1k4MIz2QJQcUGcY6015zCn015Ep4iD-gLQkeRq3qG26q8FNESTR1mLQv88XtItEIkRaIfwduxnayJCMm2pBAExitzQ1uZXT_5J_V1EloEP0x4z3KzUwvdBihy-fppHwdfidu51FCgEj8fB_XFbUKfZEo5ipGznmMywx--pu_qOXqQC8VPkGKXbu9VPPQMIIR8x-9eyqxyPV-MH3fNaVGFTdATwA
 
 {
-  "token": "a8fdd870-9822-40fc-9449-797b721e844f"
+  "token": "fcfed4c6-b0a5-474e-b36f-ea441dd7e9be"
 }

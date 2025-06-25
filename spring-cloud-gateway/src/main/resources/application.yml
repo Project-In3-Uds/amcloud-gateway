@@ -1,56 +1,108 @@
 server:
-  port: 8080
+  port: ${GATEWAY_SERVER_PORT}
+  application:
+    name: ${GATEWAY_APPLICATION_NAME}
 
 spring:
-  application:
-    name: gateway
-
   cloud:
     gateway:
       forwarded:
         enabled: true
 
       routes:
-        - id: test_route
-          uri: http://httpbin.org
+        # Routes for TestController endpoints now located in the IAM service
+        - id: test_public_route
+          uri: ${IAM_ROUTE_URI}
           predicates:
-            - Path=/test/**
+            - Path=/public/**
           filters:
-            - RewritePath=/test/(?<segment>.*), /${segment}
-        
-        - id: iam_route
-          uri: http://localhost:8081
+            - RewritePath=/public/(?<segment>.*), /test/public/${segment}
+
+        - id: test_secured_route
+          uri: ${IAM_ROUTE_URI}
           predicates:
-            - Path=/auth/**
+            - Path=/api/secured
+          filters:
+            - RewritePath=/api/secured, /test/api/secured
+             
+        - id: test_admin_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/api/admin/dashboard
+          filters:
+            - RewritePath=/api/admin/dashboard, /test/api/admin/dashboard
+             
+        - id: test_data_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/api/data/read
+          filters:
+            - RewritePath=/api/data/read, /test/api/data/read
+             
+        # Existing routes for other services
+        - id: iam_route
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=${IAM_ROUTE_PATH}
 
         - id: billing_route
-          uri: http://localhost:8082
+          uri: ${BILLING_ROUTE_URI}
           predicates:
-            - Path=/billing/**, /billing
+            - Path=${BILLING_ROUTE_PATH}
           filters:
-            - RewritePath=/billing(?<segment>/?.*), /api/subscriptions${segment}
-
+            - RewritePath=${BILLING_ROUTE_REWRITE}
+             
         - id: reservation_service
-          uri: http://localhost:8083
+          uri: ${RESERVATION_ROUTE_URI}
           predicates:
-            - Path=/reservations/**, /reservations
+            - Path=${RESERVATION_ROUTE_PATH}
           filters:
-            - RewritePath=/reservations(?<segment>/?.*), /api/reservations${segment}
+            - RewritePath=${RESERVATION_ROUTE_REWRITE}
 
         - id: invitation_route
-          uri: http://localhost:8084
+          uri: ${INVITATION_ROUTE_URI}
           predicates:
-            - Path=/invitations/**, /invitations
+            - Path=${INVITATION_ROUTE_PATH}
           filters:
-            - RewritePath=/invitations(?<segment>/?.*), /api/invitations${segment}
+            - RewritePath=${INVITATION_ROUTE_REWRITE}
 
         - id: notification_route
-          uri: http://localhost:8085
+          uri: ${NOTIFICATION_ROUTE_URI}
           predicates:
-            - Path=/notifications/**, /notifications
+            - Path=${NOTIFICATION_ROUTE_PATH}
           filters:
-            - RewritePath=/notifications(?<segment>/?.*), /api/notifications${segment}    
+            - RewritePath=${NOTIFICATION_ROUTE_REWRITE}
+
+        - id: secure-data-route
+          uri: ${SECURE_DATA_ROUTE_URI}
+          predicates:
+            - Path=${SECURE_DATA_ROUTE_PATH}
+          filters:
+            - RemoveRequestHeader=Authorization # Optional: Remove the Authorization header if not needed downstream
+
+        # Example route for HTTPS testing
+        - id: test_https_route
+          uri: ${TEST_HTTPS_ROUTE_URI}
+          predicates:
+            - Path=${TEST_HTTPS_ROUTE_PATH}
+          filters:
+            - RewritePath=${TEST_HTTPS_ROUTE_REWRITE}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+          jwk-set-uri: ${JWT_JWK_SET_URI}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+    health:
+      show-details: always
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway: ${GATEWAY_LOGGING_LEVEL}
