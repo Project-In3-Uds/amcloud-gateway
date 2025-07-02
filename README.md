@@ -102,12 +102,10 @@ curl http://localhost:8080/billing/list
 
 ## Architecture Overview
 
-Below is a corrected diagram showing the flow where authentication (login) is handled directly by IAM, while all other API requests pass through the Gateway:
-
 ```mermaid
 sequenceDiagram
     actor Utilisateur
-    participant IAM as "IAM (Keycloak/Okta)"
+    participant IAM as "IAM"
     participant Gateway as "API Gateway"
     participant Microservice as "Microservice (Ex: Billing)"
     participant Invitation as "Invitation Service"
@@ -115,61 +113,72 @@ sequenceDiagram
     participant Notification as "Notification Service"
     participant Billing as "Billing Service"
 
-    %% Authentification - direct vers IAM
+    %% Initialisation du Gateway
     rect rgb(230, 255, 230)
-        Note over Utilisateur, IAM: Étape 1 - Authentification (login direct vers IAM)
+        Note over Gateway, IAM: Initialisation du Gateway
+        Gateway->>IAM: Demande de configuration JWKS (/realms/myrealm/protocol/openid-connect/certs)
+        IAM-->>Gateway: Retourne le JWKS (clé publique pour validation JWT)
+        Note right of Gateway: Le Gateway est maintenant prêt à valider les JWT.
+    end
+
+    %% Étape 1 - Authentification
+    rect rgb(230, 255, 230)
+        Note over Utilisateur, IAM: Étape 1 - Authentification
         Utilisateur->>IAM: POST /login (email/mot de passe)
-        IAM-->>Utilisateur: JWT (accès) + Refresh Token
+        IAM-->>Utilisateur: Retourne un JWT (accès) + Refresh Token
         Note right of IAM: JWT contient:<br>sub, roles, scopes, exp, iss
     end
 
-    %% Accès API via Gateway (JWT requis)
+    %% Étape 2 - Requête vers un microservice (avec JWT)
     rect rgb(255, 255, 230)
-        Note over Utilisateur, Microservice: Étape 2 - Requêtes API (via Gateway, JWT requis)
+        Note over Utilisateur, Microservice: Étape 2 - Requête vers un microservice (avec JWT)
 
         alt Token Valide et Autorisé
             Utilisateur->>Gateway: GET /activities (Header: Authorization: Bearer <JWT>)
             Gateway->>Gateway: 1. Valide la signature du JWT (via JWKS)
             Gateway->>Gateway: 2. Vérifie les scopes/rôles (ex: "activity:read")
             Gateway->>Microservice: Forward la requête (ajoute X-User-ID, X-Roles)
+            Note right of Microservice: Utilise X-User-ID pour la logique métier
             Microservice-->>Gateway: Réponse (données ou erreur)
             Gateway-->>Utilisateur: Retourne le résultat
         else Token Invalide/expiré ou Accès refusé
             Utilisateur->>Gateway: GET /activities (Header: Authorization: Bearer <JWT Invalide>)
             Gateway->>Gateway: 1. Valide la signature du JWT (échec)
+            Note left of Gateway: [Token Invalide/expiré]
             Gateway--xUtilisateur: 401 Unauthorized
 
             Utilisateur->>Gateway: GET /admin/dashboard (Header: Authorization: Bearer <JWT>)
             Gateway->>Gateway: 2. Vérifie les scopes/rôles (accès refusé)
+            Note left of Gateway: [Accès refusé]
             Gateway--xUtilisateur: 403 Forbidden
         end
     end
 
-    %% Exemples de routage vers différents services via le Gateway
+    %% Étape 3 - Requêtes Spécifiques aux Microservices
     rect rgb(230, 255, 230)
-        Note over Utilisateur, Billing: Requêtes vers microservices via Gateway
-        Utilisateur->>Gateway: /billing/list
-        Gateway->>Billing: Forward
+        Note over Utilisateur, Billing: Étape 3 - Requêtes Spécifiques aux Microservices
+        Utilisateur->>Gateway: Request to /billing/list
+        Gateway->>Billing: Forward to Billing service
         Billing-->>Gateway: Response
         Gateway-->>Utilisateur: Response
 
-        Utilisateur->>Gateway: /reservations/create
-        Gateway->>Reservation: Forward
+        Utilisateur->>Gateway: Request to /reservations/create
+        Gateway->>Reservation: Forward to Reservation service
         Reservation-->>Gateway: Response
         Gateway-->>Utilisateur: Response
 
-        Utilisateur->>Gateway: /notifications/send
-        Gateway->>Notification: Forward
+        Utilisateur->>Gateway: Request to /notifications/send
+        Gateway->>Notification: Forward to Notification service
         Notification-->>Gateway: Response
         Gateway-->>Utilisateur: Response
 
-        Utilisateur->>Gateway: /invitations/create
-        Gateway->>Invitation: Forward
+        Utilisateur->>Gateway: Request to /invitations/create
+        Gateway->>Invitation: Forward to Invitation service
         Invitation-->>Gateway: Response
         Gateway-->>Utilisateur: Response
     end
 
-    %% Cas Spécifique : Refresh Token ou introspection
+    %% Cas Spécifique : Requêtes Directes vers IAM
     rect rgb(255, 230, 230)
         Note over Utilisateur, IAM: Cas Spécifique : Requêtes Directes vers IAM
         Utilisateur->>IAM: (Optionnel) POST /oauth/token (Refresh Token pour un nouveau JWT)

@@ -57,7 +57,9 @@ public class SecurityConfig {
                         .pathMatchers("/api/admin/**").hasRole("ADMIN")
                         // Require 'read' scope for requests to /api/data/**
                         .pathMatchers("/api/data/**").hasAuthority("SCOPE_read")
-                        // Secure all other requests; authentication is required by default
+                        // Permit access to Springdoc/Swagger UI endpoints
+                        .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll() 
+                         // Secure all other requests; authentication is required by default
                         .anyExchange().authenticated()
                 )
                 // Configure OAuth2 Resource Server to enable JWT authentication
