@@ -40,10 +40,30 @@ spring:
             - RewritePath=/api/data/read, /test/api/data/read
              
         # Existing routes for other services
-        - id: iam_route
+        - id: iam_auth_route  
           uri: ${IAM_ROUTE_URI}
           predicates:
-            - Path=${IAM_ROUTE_PATH}
+            - Path=${IAM_ROUTE_PATH}  
+
+        - id: iam_users_route 
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/v1/users/**  
+        
+        - id: iam_roles_route 
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/v1/roles/**  
+
+        - id: iam_permissions_route 
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/v1/permissions/**    
+        
+        - id: iam_admin_realms_route 
+          uri: ${IAM_ROUTE_URI}
+          predicates:
+            - Path=/v1/admin/realms/**
 
         - id: billing_route
           uri: ${BILLING_ROUTE_URI}
